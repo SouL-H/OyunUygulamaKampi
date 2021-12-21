@@ -31,6 +31,9 @@ void main() {
     print(element);
   });
   //Liste çevirdik.
-  List<int> list = si.toList();  
-
+  List<int> list = si.toList();
+  //Entries nesne
+  for (final e in a.entries) {
+    print('${e.key}: ${e.value}');
+  }
 }
