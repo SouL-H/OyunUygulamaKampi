@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+  //Hotreload'da bu nesneler sıfırdan yaratılıyor fakat state'de bu değişkenler tutulabiliyor.
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
@@ -69,6 +70,11 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            Texting("Şu anki değer $_counter"),
+            Sayac(
+              "Dişari değer : $_counter",
+              ilkDeger: 3,
+            ),
           ],
         ),
       ),
@@ -92,4 +98,46 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+}
+
+class Texting extends StatelessWidget {
+  final String text;
+  const Texting(this.text, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text);
+  }
+}
+
+class Sayac extends StatefulWidget {
+  final String sayac;
+  final int ilkDeger;
+  const Sayac(this.sayac, {Key? key, required this.ilkDeger}) : super(key: key);
+
+  @override
+  _SayacState createState() => _SayacState();
+}
+
+class _SayacState extends State<Sayac> {
+  int sayi = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    sayi = widget.ilkDeger; //Üstten erişim sağlandı.
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          sayi++;
+        });
+      },
+      child: Text('${widget.sayac}, içerideki: $sayi'),
+    );
+  }
+  //Text(widget.sayac);//Kendi statesindeki değere widget ile ulaşabiliriz.
 }
