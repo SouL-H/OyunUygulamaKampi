@@ -1,3 +1,4 @@
+import 'package:campapp/buildTest.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,7 +15,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      //home: const MyHomePage(title: 'Flutter Demo Home Page'), Eski ekran.
+      home: BuildExp(),
     );
   }
 }
@@ -32,6 +34,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   int aktifButton = 0;
+  String istenenYazi = '';
   bool checkEt = false;
 
   void _incrementCounter() {
@@ -66,11 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             //Veriyi kendisi tutuyor. Stateyi bizim yönetmemiz gerekmiyor.
-            TextField(
-              onChanged: (value) {
-                print(value);
-              },
-            ),
+            Writing(istenenYazi: istenenYazi),
             //Stateyi biz tutarız.
             Checkbox(
                 value: checkEt,
@@ -98,6 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         print('0');
                         setState(() {
                           aktifButton = (aktifButton + 1) % 2;
+                          istenenYazi = 'sifir';
                         });
                       }
                     : null,
@@ -108,6 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         print('1');
                         setState(() {
                           aktifButton = (aktifButton + 1) % 2;
+                          istenenYazi = 'bir';
                         });
                       }
                     : null,
@@ -177,4 +178,62 @@ class _SayacState extends State<Sayac> {
     );
   }
   //Text(widget.sayac);//Kendi statesindeki değere widget ile ulaşabiliriz.
+}
+
+class Writing extends StatefulWidget {
+  final String istenenYazi;
+  const Writing({
+    Key? key,
+    required this.istenenYazi,
+  }) : super(key: key);
+
+  @override
+  State<Writing> createState() => _WritingState();
+}
+
+class _WritingState extends State<Writing> {
+  late TextEditingController controller;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controller = TextEditingController();
+    controller.addListener(() {
+      print('yeni değer: ${controller.text}');
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  //Hot reloadlarda stabil kalmasını sağladık.
+  @override
+  void didUpdateWidget(covariant Writing oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.istenenYazi != widget.istenenYazi) {
+      controller.text = widget.istenenYazi;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      onChanged: (value) {
+        print(value);
+      },
+      decoration: InputDecoration(
+          suffixIcon: IconButton(
+        icon: Icon(Icons.delete),
+        onPressed: () {
+          controller.text = '';
+        },
+      )),
+    );
+  }
 }
