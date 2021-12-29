@@ -31,6 +31,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  int aktifButton = 0;
+  bool checkEt = false;
 
   void _incrementCounter() {
     setState(() {
@@ -63,6 +65,21 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            //Veriyi kendisi tutuyor. Stateyi bizim yönetmemiz gerekmiyor.
+            TextField(
+              onChanged: (value) {
+                print(value);
+              },
+            ),
+            //Stateyi biz tutarız.
+            Checkbox(
+                value: checkEt,
+                onChanged: (value) {
+                  print(value);
+                  setState(() {
+                    if (value != null) checkEt = value;
+                  });
+                }),
             const Text(
               'You have pushed the button this many times:',
             ),
@@ -75,6 +92,26 @@ class _MyHomePageState extends State<MyHomePage> {
               "Dişari değer : $_counter",
               ilkDeger: 3,
             ),
+            ElevatedButton(
+                onPressed: aktifButton == 0
+                    ? () {
+                        print('0');
+                        setState(() {
+                          aktifButton = (aktifButton + 1) % 2;
+                        });
+                      }
+                    : null,
+                child: Text('0')),
+            ElevatedButton(
+                onPressed: aktifButton == 1
+                    ? () {
+                        print('1');
+                        setState(() {
+                          aktifButton = (aktifButton + 1) % 2;
+                        });
+                      }
+                    : null,
+                child: Text('1')),
           ],
         ),
       ),
