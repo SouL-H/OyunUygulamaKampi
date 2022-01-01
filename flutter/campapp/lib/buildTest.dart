@@ -9,7 +9,7 @@ class BuildExp extends StatefulWidget {
 
 class _BuildExpState extends State<BuildExp> {
   var sinif = 5;
-  var baslik = "Öğrenciler";
+  var baslik = "Test";
   var ogrenciler = ["Ali", "Ayşe", "Can"];
 
   @override
@@ -23,11 +23,23 @@ class _BuildExpState extends State<BuildExp> {
         ),
         body: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            //mainAxisAlignment: MainAxisAlignment.spaceEvenly, //Kapsadığı alan içinde boşluk bırkır. fakat main axis size kullandığımız için aligment gerekmiyor şuan
+            crossAxisAlignment:
+                CrossAxisAlignment.center, //Kapsadığı alanı büyüdür.
             children: <Widget>[
-              Text(
-                '$sinif. Sinif',
-                textScaleFactor: 2,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                //mainAxisSize: MainAxisSize.min, //Tüm boşlukları siler bu rowun.
+                children: [
+                  Icon(Icons.star),
+                  Text(
+                    '$sinif. Test',
+                    textScaleFactor: 2,
+                  ),
+                  Icon(Icons.star),
+                ],
               ),
               Text(
                 '$baslik',
