@@ -10,11 +10,10 @@ class BuildExp extends StatefulWidget {
 class _BuildExpState extends State<BuildExp> {
   var sinif = 5;
   var baslik = "Test";
-  var ogrenciler = ["Ali", "Ayşe", "Can"];
-
+  var ogrenciler = [" Ali", "Ayşe", "Can"];
   void yeniOgrenciEkle(String yeniOgrenci) {
     setState(() {
-      ogrenciler.add(yeniOgrenci);
+      ogrenciler = [...ogrenciler, yeniOgrenci];
     });
   }
 
@@ -27,31 +26,53 @@ class _BuildExpState extends State<BuildExp> {
       appBar: AppBar(
         title: Text("Merhaba"),
       ),
-      body: Sinif(
+      body: SinifBilgisi(
           sinif: sinif,
           baslik: baslik,
           ogrenciler: ogrenciler,
-          yeniOgrenciEkle: yeniOgrenciEkle),
+          yeniOgrenciEkle: yeniOgrenciEkle,
+          child: const Sinif()),
     );
+  }
+}
+
+class SinifBilgisi extends InheritedWidget {
+  const SinifBilgisi({
+    Key? key,
+    required this.child,
+    required this.sinif,
+    required this.baslik,
+    required this.ogrenciler,
+    required this.yeniOgrenciEkle,
+  }) : super(key: key, child: child);
+
+  final Widget child;
+  final String baslik;
+  final int sinif;
+  final List<String> ogrenciler;
+  final void Function(String yeniOgrenci) yeniOgrenciEkle;
+//
+  static SinifBilgisi? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<SinifBilgisi>();
+  }
+
+  @override
+  bool updateShouldNotify(SinifBilgisi oldWidget) {
+    return sinif != oldWidget ||
+        baslik != oldWidget ||
+        ogrenciler != oldWidget.ogrenciler ||
+        yeniOgrenciEkle != oldWidget.yeniOgrenciEkle;
   }
 }
 
 class Sinif extends StatelessWidget {
   const Sinif({
     Key? key,
-    required this.sinif,
-    required this.baslik,
-    required this.ogrenciler,
-    required this.yeniOgrenciEkle,
   }) : super(key: key);
-
-  final int sinif;
-  final String baslik;
-  final List<String> ogrenciler;
-  final void Function(String yeniOgrenci) yeniOgrenciEkle;
 
   @override
   Widget build(BuildContext context) {
+    final sinifBilgisi = SinifBilgisi.of(context);
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -66,18 +87,18 @@ class Sinif extends StatelessWidget {
             children: [
               Icon(Icons.star),
               Text(
-                '$sinif. Test',
+                '${sinifBilgisi?.sinif}. Test',
                 textScaleFactor: 2,
               ),
               Icon(Icons.star),
             ],
           ),
           Text(
-            '$baslik',
+            '${sinifBilgisi?.baslik}',
             textScaleFactor: 1.5,
           ),
-          OgrenciListesi(ogrenciler: ogrenciler),
-          OgrenciEkleme(yeniOgrenciEkle: yeniOgrenciEkle),
+          OgrenciListesi(),
+          OgrenciEkleme(),
         ],
       ),
     );
@@ -87,26 +108,22 @@ class Sinif extends StatelessWidget {
 class OgrenciListesi extends StatelessWidget {
   const OgrenciListesi({
     Key? key,
-    required this.ogrenciler,
   }) : super(key: key);
-  final List<String> ogrenciler;
 
   @override
   Widget build(BuildContext context) {
+    final sinifBilgisi = SinifBilgisi.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        for (final o in ogrenciler) Text(o),
+        for (final o in sinifBilgisi!.ogrenciler) Text(o),
       ],
     );
   }
 }
 
 class OgrenciEkleme extends StatefulWidget {
-  const OgrenciEkleme({Key? key, required this.yeniOgrenciEkle})
-      : super(key: key);
-
-  final void Function(String yeniOgrenci) yeniOgrenciEkle;
+  const OgrenciEkleme({Key? key}) : super(key: key);
 
   @override
   State<OgrenciEkleme> createState() => _OgrenciEklemeState();
@@ -123,6 +140,7 @@ class _OgrenciEklemeState extends State<OgrenciEkleme> {
 
   @override
   Widget build(BuildContext context) {
+    final sinifBilgisi = SinifBilgisi.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -137,7 +155,7 @@ class _OgrenciEklemeState extends State<OgrenciEkleme> {
                 ? null
                 : () {
                     final yeniOgrenci = controller.text;
-                    widget.yeniOgrenciEkle(yeniOgrenci);
+                    sinifBilgisi?.yeniOgrenciEkle(yeniOgrenci);
                     controller.text = '';
                     // setState(() {
                     //   ogrenciler.add('yeni');
