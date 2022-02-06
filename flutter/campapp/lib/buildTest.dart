@@ -32,6 +32,49 @@ class _BuildExpState extends State<BuildExp> {
           ogrenciler: ogrenciler,
           yeniOgrenciEkle: yeniOgrenciEkle,
           child: const Sinif()),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Hata mesajı")),
+          );
+        },
+        child: Text("Alert"),
+      ),
+      drawer: Drawer(
+        // Add a ListView to the drawer. This ensures the user can scroll
+        // through the options in the drawer if there isn't enough vertical
+        // space to fit everything.
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text('Drawer Header'),
+            ),
+            ListTile(
+              title: const Text('Item 1'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Item 2'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -97,8 +140,17 @@ class Sinif extends StatelessWidget {
             '${sinifBilgisi?.baslik}',
             textScaleFactor: 1.5,
           ),
-          OgrenciListesi(),
+          Expanded(child: OgrenciListesi()),
           OgrenciEkleme(),
+          ElevatedButton(
+              onPressed: () {
+                final ogrenciler = SinifBilgisi.of(context)
+                    ?.ogrenciler; //Ogrenci elemanlarına erişebiliyoruz.
+                ogrenciler!.forEach((element) {
+                  print(element);
+                });
+              },
+              child: Text("Erişim"))
         ],
       ),
     );
@@ -113,12 +165,19 @@ class OgrenciListesi extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sinifBilgisi = SinifBilgisi.of(context);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        for (final o in sinifBilgisi!.ogrenciler) Text(o),
-      ],
-    );
+    return ListView.separated(
+        itemBuilder: (context, index) {
+          return ListTile(
+            key: ValueKey(index), //Karışıklığı önlemek için key verdik.
+            leading: Icon(Icons.circle), //Sol baştaki buton
+            title: Text(sinifBilgisi!.ogrenciler[index]), //Veri
+          );
+        },
+        separatorBuilder: (BuildContext context, int index) {
+          //Ara çizgi
+          return Divider(color: Colors.black);
+        },
+        itemCount: sinifBilgisi!.ogrenciler.length);
   }
 }
 
