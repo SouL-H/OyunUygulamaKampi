@@ -106,16 +106,66 @@ class _InputPageState extends State<InputPage> {
                 yorumController.text,
                 overflow: TextOverflow.ellipsis,
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    final uygunMu = formKey.currentState
-                        ?.validate(); //içerik uygunsa true false dönüyor.
-                    if (uygunMu == true) {
-                      formKey.currentState?.save();
-                      print('sunucuya gönderiliyor.');
-                    }
-                  },
-                  child: Text("Gönder"))
+              Transform.rotate(
+                angle: (3.12) * 0.2,
+                child: ElevatedButton(
+                    onPressed: () {
+                      final uygunMu = formKey.currentState
+                          ?.validate(); //içerik uygunsa true false dönüyor.
+                      if (uygunMu == true) {
+                        formKey.currentState?.save();
+                        print('sunucuya gönderiliyor.');
+                      }
+                    },
+                    child: Text("Gönder")),
+              ),
+              Transform.scale(
+                scale: (3.12) * 0.3,
+                child: ElevatedButton(
+                    onPressed: () {
+                      final uygunMu = formKey.currentState
+                          ?.validate(); //içerik uygunsa true false dönüyor.
+                      if (uygunMu == true) {
+                        formKey.currentState?.save();
+                        print('sunucuya gönderiliyor.');
+                      }
+                    },
+                    child: Text("Gönder")),
+              ),
+              RotatedBox(
+                quarterTurns: 4,
+                child: SizedBox(
+                  width: 300,
+                  height: 100,
+                  child: FittedBox(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          final uygunMu = formKey.currentState
+                              ?.validate(); //içerik uygunsa true false dönüyor.
+                          if (uygunMu == true) {
+                            formKey.currentState?.save();
+                            print('sunucuya gönderiliyor.');
+                          }
+                        },
+                        child: Text("Gönder")),
+                  ),
+                ),
+              ),
+              Text("Eğer FittedBox kullanılmasa görünüm böyle olurdu. "),
+              SizedBox(
+                width: 300,
+                height: 100,
+                child: ElevatedButton(
+                    onPressed: () {
+                      final uygunMu = formKey.currentState
+                          ?.validate(); //içerik uygunsa true false dönüyor.
+                      if (uygunMu == true) {
+                        formKey.currentState?.save();
+                        print('sunucuya gönderiliyor.');
+                      }
+                    },
+                    child: Text("Gönder")),
+              )
             ],
           ),
         ));
