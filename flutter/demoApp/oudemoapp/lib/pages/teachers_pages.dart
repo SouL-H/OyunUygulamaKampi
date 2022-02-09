@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class StudentsPage extends StatefulWidget {
-  StudentsPage({Key? key}) : super(key: key);
+class TeachersPage extends StatefulWidget {
+  TeachersPage({Key? key}) : super(key: key);
 
   @override
-  State<StudentsPage> createState() => _StudentsPageState();
+  State<TeachersPage> createState() => _TeachersPageState();
 }
 
-class _StudentsPageState extends State<StudentsPage> {
+class _TeachersPageState extends State<TeachersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text("Öğrenciler")),
+        appBar: AppBar(title: const Text("Öğretmenler")),
         body: Column(
           children: [
             const PhysicalModel(
@@ -21,7 +21,7 @@ class _StudentsPageState extends State<StudentsPage> {
                 child: Padding(
                   padding:
                       EdgeInsets.symmetric(vertical: 16.0, horizontal: 32.0),
-                  child: Text('10 öğrenci'),
+                  child: Text('10 Öğretmen'),
                 ),
               ),
             ),
@@ -30,11 +30,8 @@ class _StudentsPageState extends State<StudentsPage> {
                 itemCount: 25,
                 separatorBuilder: (context, index) => const Divider(),
                 itemBuilder: (context, index) => ListTile(
-                  title: const Text("Ali"),
-                  leading: const Text("👨"),// 👩
-                  trailing: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.favorite_border)),
+                  title: const Text("Ayşe Hoca"),
+                  leading: const Text("👩"), // 👨
                 ),
               ),
             )

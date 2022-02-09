@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:oudemoapp/pages/messages_page.dart';
+import 'package:oudemoapp/pages/students_pages.dart';
+import 'package:oudemoapp/pages/teachers_pages.dart';
 
 void main() {
-  runApp(const StudentApp());
+  runApp(StudentApp());
 }
 
 class StudentApp extends StatelessWidget {
@@ -10,11 +13,12 @@ class StudentApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'DemoApp',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(title: 'Flutter Demo Home Page'),
+      home: messagesPage(),
     );
   }
 }
@@ -33,8 +37,7 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-          ],
+          children: <Widget>[],
         ),
       ),
     );
