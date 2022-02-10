@@ -1,15 +1,17 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:oudemoapp/repository/messages_repository.dart';
 
-class messagesPage extends StatefulWidget {
-  messagesPage({Key? key}) : super(key: key);
+class MessagesPage extends StatefulWidget {
+  final MessagesRepository messagesRepository;
+  MessagesPage(this.messagesRepository, {Key? key}) : super(key: key);
 
   @override
-  State<messagesPage> createState() => _messagesPageState();
+  State<MessagesPage> createState() => _messagesPageState();
 }
 
-class _messagesPageState extends State<messagesPage> {
+class _messagesPageState extends State<MessagesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,29 +20,13 @@ class _messagesPageState extends State<messagesPage> {
           children: [
             Expanded(
               child: ListView.builder(
+
+                  itemCount: widget.messagesRepository.messages.length,
                   reverse: true, //son kısmından başlıyor.
                   itemBuilder: ((context, index) {
-                    bool benMiyim = Random().nextBool();
-                    return Align(
-                        alignment: benMiyim
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 16.0),
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: Colors.orange.shade200,
-                              border: Border.all(color: Colors.grey, width: 2),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(24.0),
-                              child: Text("Mesaj"),
-                            ),
-                          ),
-                        ));
+
+                    return showMessage(
+                        widget.messagesRepository.messages[widget.messagesRepository.messages.length-index-1]);
                   })),
             ),
             DecoratedBox(
@@ -77,6 +63,34 @@ class _messagesPageState extends State<messagesPage> {
               ),
             )
           ],
+        ));
+  }
+}
+
+class showMessage extends StatelessWidget {
+  final Message message;
+  const showMessage(
+    this.message, {
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+        alignment: message.sender=="Lory" ? Alignment.centerRight : Alignment.centerLeft,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: Colors.orange.shade200,
+              border: Border.all(color: Colors.grey, width: 2),
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Text(message.text),
+            ),
+          ),
         ));
   }
 }
