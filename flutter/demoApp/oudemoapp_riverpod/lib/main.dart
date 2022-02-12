@@ -17,7 +17,7 @@ class StudentApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Öğrenci Uygulaması',
+      title: 'Student Apps',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
