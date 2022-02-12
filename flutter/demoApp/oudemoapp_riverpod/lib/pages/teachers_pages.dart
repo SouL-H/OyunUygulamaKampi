@@ -29,12 +29,7 @@ class TeachersPage extends ConsumerWidget {
                   ),
                   Align(
                       alignment: Alignment.centerRight,
-                      child: IconButton(
-                        icon: const Icon(Icons.download),
-                        onPressed: () {
-                          ref.read(teachersProvider).download();
-                        },
-                      ))
+                      child: TeacherDowlandButton())
                 ],
               ),
             ),
@@ -51,6 +46,47 @@ class TeachersPage extends ConsumerWidget {
   }
 }
 
+class TeacherDowlandButton extends StatefulWidget {
+  const TeacherDowlandButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<TeacherDowlandButton> createState() => _TeacherDowlandButtonState();
+}
+
+class _TeacherDowlandButtonState extends State<TeacherDowlandButton> {
+  bool isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(builder: (context, ref, child) {
+      return isLoading
+          ? const CircularProgressIndicator()
+          : IconButton(
+              icon: const Icon(Icons.download),
+              onPressed: () async {
+                //TODO Loading
+                //TODO error
+                try {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  await ref.read(teachersProvider).download();
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(e.toString())),
+                  ); 
+                } finally {
+                  setState(() {
+                    isLoading = false;
+                  });
+                }
+              },
+            );
+    });
+  }
+}
+
 class TeacherLine extends StatelessWidget {
   final Teacher teacher;
   const TeacherLine(
@@ -63,7 +99,10 @@ class TeacherLine extends StatelessWidget {
     return ListTile(
       title: Text(teacher.name + ' ' + teacher.surname),
       leading: IntrinsicWidth(
-          child: Center(child: Text(teacher.gender == "Man" ? '👨' : '👩'))),
+          child: Center(
+              child: Text((teacher.gender == "Man" || teacher.gender == "Erkek")
+                  ? '👨'
+                  : '👩'))),
     );
   }
 }
