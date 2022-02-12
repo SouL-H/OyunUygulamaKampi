@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:oudemoapp_riverpod/services/data_service.dart';
+
+import '../model/teacher.dart';
 
 class TeachersRepository extends ChangeNotifier {
   final List teachers = [
@@ -7,15 +12,15 @@ class TeachersRepository extends ChangeNotifier {
     Teacher("Jhoon", "Wick", 34, "Man"),
     Teacher("Ketty", "Born", 32, "Woman"),
   ];
+  final DataService dataService;
+  TeachersRepository(this.dataService);
+  void download() {
+    Teacher teacher = dataService.teacherDownload();
+
+    teachers.add(teacher);
+    notifyListeners(); //Page reflesh
+  }
 }
 
-final teachersProvider = ChangeNotifierProvider((ref) => TeachersRepository());
-
-class Teacher {
-  String name;
-  String surname;
-  int age;
-  String gender;
-
-  Teacher(this.name, this.surname, this.age, this.gender);
-}
+final teachersProvider = ChangeNotifierProvider(
+    (ref) => TeachersRepository(ref.watch(dataServiceProvider)));

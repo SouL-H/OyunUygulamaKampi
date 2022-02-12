@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../model/message.dart';
+
 class MessagesRepository extends ChangeNotifier {
   final List<Message> messages = [
     Message(
@@ -25,9 +27,3 @@ class NewMessageCount extends StateNotifier<int> {
 final newMessageCountProvider =
     StateNotifierProvider<NewMessageCount,int>((ref) => NewMessageCount(4));
 
-class Message {
-  String text;
-  String sender;
-  DateTime time;
-  Message(this.text, this.sender, this.time);
-}

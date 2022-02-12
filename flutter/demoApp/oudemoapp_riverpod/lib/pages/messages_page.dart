@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:oudemoapp_riverpod/repository/messages_repository.dart';
 
+import '../model/message.dart';
+
 class MessagesPage extends ConsumerStatefulWidget {
   const MessagesPage({Key? key}) : super(key: key);
 
