@@ -11,4 +11,8 @@ class Teacher {
           //m['name'],m['surname'],m['age'],m['gender'], http verilerine geçtik. Api türkçe yazılmış.
           m['ad'], m['soyad'], m['yas'], m['cinsiyet'],
         );
+
+  Map toMap() {
+    return {'ad': name, 'soyad': surname, 'yas': age, 'cinsiyet': gender};
+  }
 }
