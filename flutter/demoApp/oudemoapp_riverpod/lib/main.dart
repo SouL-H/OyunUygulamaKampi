@@ -1,5 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:oudemoapp_riverpod/login_service/google_sign_in.dart';
 import 'package:oudemoapp_riverpod/pages/messages_page.dart';
 import 'package:oudemoapp_riverpod/pages/students_pages.dart';
 import 'package:oudemoapp_riverpod/pages/teachers_pages.dart';
@@ -21,7 +24,53 @@ class StudentApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(title: 'Student Main PAge'),
+      home: SplahScreen(),
+    );
+  }
+}
+
+class SplahScreen extends StatefulWidget {
+  SplahScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SplahScreen> createState() => _SplahScreenState();
+}
+
+class _SplahScreenState extends State<SplahScreen> {
+  bool isFirebaseInitialized = false;
+  @override
+  void initState() {
+    initializeFirebase();
+    super.initState();
+  }
+
+  Future<void> initializeFirebase() async {
+    await Firebase.initializeApp();
+    setState(() {
+      isFirebaseInitialized = true;
+    });
+    //_goToHomePage();
+  }
+
+  void _goToHomePage(GoogleSignInAccount? b) {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => HomePage(title: '${b!.displayName}'),
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+          child: isFirebaseInitialized
+              ? ElevatedButton(
+                  //TODO Catch error
+                  onPressed: () async {
+                    var b = await signInWithGoogle();
+                    _goToHomePage(b);
+                  },
+                  child: const Text("Google Sign In"))
+              : const CircularProgressIndicator()),
     );
   }
 }
