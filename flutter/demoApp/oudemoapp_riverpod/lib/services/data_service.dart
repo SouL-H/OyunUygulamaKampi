@@ -41,6 +41,19 @@ class DataService {
       throw Exception('Teacher not creted error: ${response.statusCode}');
     }
   }
+
+  Future<List<Teacher>> allTeacherGet() async {
+    final response =
+        await http.get(Uri.parse('$baseUrl/ogretmen')); //36 erkek - 39 Kadin
+
+    if (response.statusCode == 200) {
+      final l = jsonDecode(response.body);
+      return l.map<Teacher>((e) => Teacher.fromMap(e)).toList();
+    } else {
+      throw Exception(
+          "Veriler indirilemedi hata kod u: ${response.statusCode}");
+    }
+  }
 }
 
 final dataServiceProvider = Provider((ref) => DataService());

@@ -35,13 +35,27 @@ class TeachersPage extends ConsumerWidget {
             ),
           ),
           Expanded(
-            child: ListView.separated(
-              itemCount: teachersRepository.teachers.length,
-              separatorBuilder: (context, index) => const Divider(),
-              itemBuilder: (context, index) =>
-                  TeacherLine(teachersRepository.teachers[index]),
-            ),
-          ),
+              child: RefreshIndicator(
+            onRefresh: () async {
+              ref.refresh(teachersListProvider);
+            },
+            child: ref.watch(teachersListProvider).when(
+                  data: (data) => ListView.separated(
+                    itemCount: data.length,
+                    separatorBuilder: (context, index) => const Divider(),
+                    itemBuilder: (context, index) => TeacherLine(data[index]),
+                  ),
+                  error: (stackTrace, previous) {
+                    //previous eski halini gösterme.
+                    return const SingleChildScrollView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        child: Text("Error"));
+                  },
+                  loading: () {
+                    return const Center(child: CircularProgressIndicator());
+                  },
+                ),
+          )),
         ],
       ),
       floatingActionButton: FloatingActionButton(

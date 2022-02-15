@@ -106,22 +106,39 @@ class _TeacherFormState extends ConsumerState<TeacherForm> {
               )),
         )));
   }
-
+  //TO DO sunucu tarafında da problem olduğunda 503 gibi sürekli tekrarlıyor, bu problem çözülecek.
   Future<void> _saved() async {
-    try {
-      setState(() {
-        isSaving = true;
-      });
-      await ref.read(dataServiceProvider).teacherAdd(Teacher.fromMap(entery));
-      Navigator.of(context).pop(true);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
-    } finally {
-      setState(() {
-        isSaving = false;
-      });
+    bool finish = false;
+    
+    while (!finish) {
+      
+      try {
+        setState(() {
+          isSaving = true;
+        });
+        await _certainSaved();
+        finish = true;
+        Navigator.of(context).pop(true);
+      } catch (e) {
+        final snackBar = ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+        await snackBar.closed;
+      } finally {
+        setState(() {
+          isSaving = false;
+        });
+      }
     }
+  }
+
+  int i = 0;
+  //Üç kere deneme yapıyor başarısız olduğunda duruyorç
+  Future<void> _certainSaved() async {
+    i++;
+    if (i < 3) {
+      throw 'Not recorted';
+    }
+    await ref.read(dataServiceProvider).teacherAdd(Teacher.fromMap(entery));
   }
 }
