@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "874320020519",
+    "project_id": "flutter-ou-akademi",
+    "storage_bucket": "flutter-ou-akademi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:874320020519:android:6755cf00d049672d897a02",
+        "android_client_info": {
+          "package_name": "com.example.oudemoapp_riverpod"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "874320020519-qisvvpkp9ev98o7pvf9n9vaj3dbt9etf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.oudemoapp_riverpod",
+            "certificate_hash": "a7dba5f80b80b3700dc38354568ada2fdb2a1f94"
+          }
+        },
+        {
+          "client_id": "874320020519-gbtvg88drtv4q03k9istndrcbabb1pko.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjUdOnK4v_L-fcyits8ySvnfvyDTTv2Gs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "874320020519-gbtvg88drtv4q03k9istndrcbabb1pko.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

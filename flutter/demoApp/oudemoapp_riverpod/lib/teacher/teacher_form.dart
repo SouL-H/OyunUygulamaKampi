@@ -106,12 +106,12 @@ class _TeacherFormState extends ConsumerState<TeacherForm> {
               )),
         )));
   }
-  //TO DO sunucu tarafında da problem olduğunda 503 gibi sürekli tekrarlıyor, bu problem çözülecek.
+
+  //TODO sunucu tarafında da problem olduğunda 503 gibi sürekli tekrarlıyor, bu problem çözülecek.
   Future<void> _saved() async {
     bool finish = false;
-    
+
     while (!finish) {
-      
       try {
         setState(() {
           isSaving = true;
