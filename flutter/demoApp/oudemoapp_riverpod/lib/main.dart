@@ -54,7 +54,7 @@ class _SplahScreenState extends State<SplahScreen> {
 
   void _goToHomePage(GoogleSignInAccount? b) {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => HomePage(title: '${b!.displayName}'),
+      builder: (context) => HomePage(userInfo: b),
     ));
   }
 
@@ -66,8 +66,9 @@ class _SplahScreenState extends State<SplahScreen> {
               ? ElevatedButton(
                   //TODO Catch error
                   onPressed: () async {
-                    var b = await signInWithGoogle();
-                    _goToHomePage(b);
+                    final b = await signInWithGoogle();
+                    if (b != null) _goToHomePage(b);
+                    print("Boş");
                   },
                   child: const Text("Google Sign In"))
               : const CircularProgressIndicator()),
@@ -76,17 +77,15 @@ class _SplahScreenState extends State<SplahScreen> {
 }
 
 class HomePage extends ConsumerWidget {
-  const HomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
+  const HomePage({Key? key, required this.userInfo}) : super(key: key);
+  final GoogleSignInAccount? userInfo;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final studentsRepository = ref.watch(studentsProvider);
     final teachersRepository = ref.watch(teachersProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
+      appBar: AppBar(title: Text(userInfo!.displayName.toString())),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -116,11 +115,20 @@ class HomePage extends ConsumerWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
+            DrawerHeader(
+              decoration: const BoxDecoration(
                 color: Colors.blue,
               ),
-              child: Text('Öğrenci adı'),
+              child: CircleAvatar(
+                  child: ClipOval(
+                child: Image.network(
+                  userInfo!.photoUrl.toString(),
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                  
+                ),
+              )),
             ),
             ListTile(
               title: const Text('Students'),
@@ -138,6 +146,17 @@ class HomePage extends ConsumerWidget {
               title: const Text('Messages'),
               onTap: () {
                 _goMessages(context);
+              },
+            ),
+            ListTile(
+              title: const Text('SignOut'),
+              onTap: () {
+                signOut();
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) {
+                    return SplahScreen();
+                  },
+                ));
               },
             ),
           ],

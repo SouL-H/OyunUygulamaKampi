@@ -24,12 +24,11 @@ class TeachersRepository extends ChangeNotifier {
   Future<List<Teacher>> allTeacher() async {
     teachers = await dataService.allTeacherGet();
     return teachers;
-    } 
+  }
 }
 
 final teachersProvider = ChangeNotifierProvider(
     (ref) => TeachersRepository(ref.watch(dataServiceProvider)));
 
-final teachersListProvider = FutureProvider((ref) {
-  return ref.watch(teachersProvider).allTeacher();
-});
+final teachersListProvider =
+    FutureProvider((ref) => ref.watch(teachersProvider).allTeacher());
