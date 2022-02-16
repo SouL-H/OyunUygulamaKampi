@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,6 +68,15 @@ class _SplahScreenState extends State<SplahScreen> {
                   //TODO Catch error
                   onPressed: () async {
                     final b = await signInWithGoogle();
+                    String uid = b!.id;
+                    FirebaseFirestore.instance.collection('users').doc(uid).set(
+                      {
+                        'isLogin': true,
+                        'lastLogin':
+                            FieldValue.serverTimestamp(), //Server o anki saati.
+                      },
+                      SetOptions(merge: true),
+                    );
                     if (b != null) _goToHomePage(b);
                     print("Boş");
                   },
@@ -126,7 +136,6 @@ class HomePage extends ConsumerWidget {
                   width: 100,
                   height: 100,
                   fit: BoxFit.cover,
-                  
                 ),
               )),
             ),
