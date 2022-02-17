@@ -1,8 +1,14 @@
+import 'dart:ffi';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:oudemoapp_riverpod/login_service/google_sign_in.dart';
 import 'package:oudemoapp_riverpod/pages/messages_page.dart';
 import 'package:oudemoapp_riverpod/pages/students_pages.dart';
@@ -125,20 +131,7 @@ class HomePage extends ConsumerWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: CircleAvatar(
-                  child: ClipOval(
-                child: Image.network(
-                  userInfo!.photoUrl.toString(),
-                  width: 100,
-                  height: 100,
-                  fit: BoxFit.cover,
-                ),
-              )),
-            ),
+            UserHeader(userInfo: userInfo),
             ListTile(
               title: const Text('Students'),
               onTap: () {
@@ -196,5 +189,82 @@ class HomePage extends ConsumerWidget {
         return const MessagesPage();
       },
     ));
+  }
+}
+
+class UserHeader extends StatefulWidget {
+  GoogleSignInAccount? userInfo;
+  UserHeader({Key? key, this.userInfo}) : super(key: key);
+
+  @override
+  State<UserHeader> createState() => _UserHeaderState();
+}
+
+class _UserHeaderState extends State<UserHeader> {
+  Future<Uint8List?>? _picFuture;
+  @override
+  void initState() {
+    _picFuture = _picDownload();
+    super.initState();
+  }
+
+  Future<Uint8List?> _picDownload() async {
+    final uid = widget.userInfo!.id;
+    final docSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    final userRecMap = docSnapshot.data();
+    if (userRecMap == null) return null;
+    if (userRecMap.containsKey('picref')) {
+      Uint8List? uint8list =
+          await FirebaseStorage.instance.ref(userRecMap['picref']).getData();
+      return uint8list;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DrawerHeader(
+      decoration: const BoxDecoration(
+        color: Colors.blue,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start, //Sola yaslama.
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          InkWell(
+              //Butona çevirdik.
+              onTap: () async {
+                XFile? xFile =
+                    await ImagePicker().pickImage(source: ImageSource.camera);
+                if (xFile == null) return;
+                final imagePath = xFile.path;
+                final piccRef = FirebaseStorage.instance
+                    .ref('picture')
+                    .child('${widget.userInfo!.id.toString()}.jpg');
+                await piccRef.putFile(File(imagePath));
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(widget.userInfo!.id)
+                    .update({'picref': piccRef.fullPath});
+
+                setState(() {});
+                _picFuture = _picDownload();
+              },
+              child: FutureBuilder<Uint8List?>(
+                  future: _picFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData && snapshot.data != null) {
+                      final picInMemory = snapshot.data!;
+                      return CircleAvatar(
+                        backgroundImage: MemoryImage(picInMemory),
+                      );
+                    }
+                    return const CircleAvatar(child: Text("0"));
+                  }))
+        ],
+      ),
+    );
   }
 }

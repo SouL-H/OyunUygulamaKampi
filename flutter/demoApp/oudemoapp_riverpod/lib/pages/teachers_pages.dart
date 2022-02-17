@@ -12,7 +12,7 @@ class TeachersPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final teachersRepository = ref.watch(teachersProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text("Öğretmenler")),
+      appBar: AppBar(title: const Text("Teachers")),
       body: Column(
         children: [
           PhysicalModel(
@@ -65,7 +65,7 @@ class TeachersPage extends ConsumerWidget {
             return const TeacherForm();
           }));
           if (created == true) {
-            print("Teacher reflesh");
+            ref.refresh(teachersListProvider);
           }
         },
         child: const Icon(Icons.add),

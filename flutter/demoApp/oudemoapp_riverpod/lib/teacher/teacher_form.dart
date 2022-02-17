@@ -110,7 +110,7 @@ class _TeacherFormState extends ConsumerState<TeacherForm> {
   //TODO sunucu tarafında da problem olduğunda 503 gibi sürekli tekrarlıyor, bu problem çözülecek.
   Future<void> _saved() async {
     bool finish = false;
-
+    int count = 3;
     while (!finish) {
       try {
         setState(() {
@@ -124,6 +124,13 @@ class _TeacherFormState extends ConsumerState<TeacherForm> {
           SnackBar(content: Text(e.toString())),
         );
         await snackBar.closed;
+        setState(() {
+          isSaving = false;
+          count -= 1;
+        });
+        if (count <= 0) {
+          break;
+        }
       } finally {
         setState(() {
           isSaving = false;
@@ -132,13 +139,7 @@ class _TeacherFormState extends ConsumerState<TeacherForm> {
     }
   }
 
-  int i = 0;
-  //Üç kere deneme yapıyor başarısız olduğunda duruyorç
   Future<void> _certainSaved() async {
-    i++;
-    if (i < 3) {
-      throw 'Not recorted';
-    }
     await ref.read(dataServiceProvider).teacherAdd(Teacher.fromMap(entery));
   }
 }

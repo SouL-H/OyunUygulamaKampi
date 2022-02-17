@@ -12,7 +12,7 @@ class Teacher {
           m['ad'], m['soyad'], m['yas'], m['cinsiyet'],
         );
 
-  Map toMap() {
+  Map<String, dynamic> toMap() {
     return {'ad': name, 'soyad': surname, 'yas': age, 'cinsiyet': gender};
   }
 }
