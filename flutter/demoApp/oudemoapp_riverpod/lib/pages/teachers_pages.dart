@@ -24,8 +24,15 @@ class TeachersPage extends ConsumerWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 16.0, horizontal: 32.0),
-                    child:
-                        Text('${teachersRepository.teachers.length} Teachers'),
+                    child: Hero(
+                        tag: 'Teachers',
+                        child: Material(
+                            //Eklenmediğinde kırmızıya sebep olabiliyormuş.
+                            child: Container(
+                                padding: const EdgeInsets.all(8.0),
+                                color: Colors.grey.shade200,
+                                child: Text(
+                                    '${teachersRepository.teachers.length} teachers')))),
                   ),
                 ),
                 const Align(

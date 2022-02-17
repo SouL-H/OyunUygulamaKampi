@@ -18,6 +18,7 @@ import 'package:oudemoapp_riverpod/pages/teachers_pages.dart';
 import 'package:oudemoapp_riverpod/repository/messages_repository.dart';
 import 'package:oudemoapp_riverpod/repository/students_repository.dart';
 import 'package:oudemoapp_riverpod/repository/teachers_repository.dart';
+import 'package:rive/rive.dart';
 
 void main() {
   runApp(const ProviderScope(child: StudentApp()));
@@ -108,6 +109,11 @@ class HomePage extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const SizedBox(
+              width: 200,
+              height: 200,
+              child: RiveAnimation.asset('animations/740-1456-runner-boy.riv'),
+            ),
             TextButton(
               child: Text('${ref.watch(newMessageCountProvider)} new message'),
               onPressed: () {
@@ -121,7 +127,14 @@ class HomePage extends ConsumerWidget {
               },
             ),
             TextButton(
-              child: Text('${teachersRepository.teachers.length} teachers'),
+              child: Hero(
+                  tag: 'Teachers',
+                  child: Material(
+                      child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          color: Colors.grey.shade200,
+                          child: Text(
+                              '${teachersRepository.teachers.length} teachers')))),
               onPressed: () {
                 _goTeachers(context);
               },

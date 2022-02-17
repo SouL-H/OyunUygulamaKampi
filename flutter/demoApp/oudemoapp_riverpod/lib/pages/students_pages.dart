@@ -49,15 +49,28 @@ class StudentLine extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     bool didLike = ref.watch(studentsProvider).didLike(student);
     return ListTile(
-      title: Text(student.name + ' ' + student.surname),
+      title: AnimatedPadding(
+          duration: const Duration(milliseconds: 175),
+          padding: didLike
+              ? const EdgeInsets.only(left: 90)
+              : const EdgeInsets.only(left: 0),
+          child: Text(student.name + ' ' + student.surname),
+          curve: Curves.bounceOut),
       leading: IntrinsicWidth(
           child: Center(child: Text(student.gender == "Man" ? '👨' : '👩'))),
       trailing: IconButton(
-          onPressed: () {
-            ref.read(studentsProvider).love(student,
-                !didLike); //Burası onpress olduğu için read ile okumak gerekiyor.
-          },
-          icon: Icon(didLike ? Icons.favorite : Icons.favorite_border)),
+        onPressed: () {
+          ref.read(studentsProvider).love(student,
+              !didLike); //Burası onpress olduğu için read ile okumak gerekiyor.
+        },
+        icon: AnimatedCrossFade(
+          firstChild: const Icon(Icons.favorite),
+          secondChild: const Icon(Icons.favorite_border),
+          crossFadeState:
+              didLike ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+          duration: Duration(seconds: 1),
+        ),
+      ),
     );
   }
 }
