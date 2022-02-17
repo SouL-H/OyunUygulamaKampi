@@ -1,11 +1,13 @@
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
@@ -257,13 +259,58 @@ class _UserHeaderState extends State<UserHeader> {
                   builder: (context, snapshot) {
                     if (snapshot.hasData && snapshot.data != null) {
                       final picInMemory = snapshot.data!;
-                      return CircleAvatar(
-                        backgroundImage: MemoryImage(picInMemory),
-                      );
+                      return MovingAvatar(picInMemory: picInMemory);
                     }
                     return const CircleAvatar(child: Text("0"));
                   }))
         ],
+      ),
+    );
+  }
+}
+
+class MovingAvatar extends StatefulWidget {
+  const MovingAvatar({
+    Key? key,
+    required this.picInMemory,
+  }) : super(key: key);
+
+  final Uint8List picInMemory;
+
+  @override
+  State<MovingAvatar> createState() => _MovingAvatarState();
+}
+
+class _MovingAvatarState extends State<MovingAvatar>
+    with SingleTickerProviderStateMixin<MovingAvatar> {
+  late Ticker _ticker;
+  double yataydaKonum = 0.0;
+  @override
+  void initState() {
+    _ticker = createTicker((Duration elapsed) {
+      final aci = pi *
+          elapsed.inMicroseconds /
+          const Duration(seconds: 1).inMicroseconds;
+      setState(() {
+        yataydaKonum = sin(aci) * 30 + 30;
+      });
+    });
+    _ticker.start();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _ticker.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: yataydaKonum),
+      child: CircleAvatar(
+        backgroundImage: MemoryImage(widget.picInMemory),
       ),
     );
   }
